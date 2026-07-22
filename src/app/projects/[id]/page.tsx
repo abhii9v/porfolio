@@ -25,6 +25,22 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+export async function generateStaticParams() {
+  try {
+    const response = await serverDatabases.listDocuments(DATABASE_ID, COLLECTIONS.projects);
+    return response.documents.map((doc: any) => ({
+      id: doc.$id,
+    }));
+  } catch {
+    return [
+      { id: 'claims-cost-forecasting' },
+      { id: 'recommender-system' },
+      { id: 'semantic_search' },
+      { id: 'cognitio-platform' },
+    ];
+  }
+}
+
 // Dynamically generate metadata
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;

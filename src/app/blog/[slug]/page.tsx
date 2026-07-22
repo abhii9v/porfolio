@@ -21,6 +21,21 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+export async function generateStaticParams() {
+  try {
+    const response = await serverDatabases.listDocuments(DATABASE_ID, COLLECTIONS.blog_posts);
+    return response.documents.map((doc: any) => ({
+      slug: doc.slug,
+    }));
+  } catch {
+    return [
+      { slug: 'scaling-time-series-forecasting-production' },
+      { slug: 'building-session-level-recommender-systems' },
+      { slug: 'hybrid-vector-search-llm-agents' },
+    ];
+  }
+}
+
 // Dynamically generate metadata
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;

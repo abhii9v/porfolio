@@ -1,0 +1,12 @@
+{
+  "projectId": "6a1ece8b002c669f2b4f",
+  "sites": [
+    {
+      "$id": "portfolio",
+      "name": "Abhinav Portfolio",
+      "buildCommand": "npm run build",
+      "outputDirectory": "out",
+      "framework": "nextjs"
+    }
+  ]
+}

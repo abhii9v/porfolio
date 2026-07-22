@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { serverDatabases, DATABASE_ID, COLLECTIONS } from '@/lib/appwrite-server';
 import { ID } from 'node-appwrite';
 
+export const dynamic = 'force-static';
+
 const experiences = [
   {
     company: 'Cognitio Analytics Inc',

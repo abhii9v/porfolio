@@ -1,9 +1,5 @@
-'use server';
-
-import { serverDatabases, DATABASE_ID, COLLECTIONS } from '@/lib/appwrite-server';
-import { Query } from 'node-appwrite';
-import { google } from '@ai-sdk/google';
-import { generateText } from 'ai';
+import { databases, DATABASE_ID, COLLECTIONS } from '@/lib/appwrite';
+import { Query } from 'appwrite';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -22,7 +18,7 @@ function tokenize(text: string): string[] {
 // Fallback rule-based matching engine when no API Key is provided
 async function getFallbackAnswer(query: string): Promise<string> {
   try {
-    const response = await serverDatabases.listDocuments(
+    const response = await databases.listDocuments(
       DATABASE_ID,
       COLLECTIONS.knowledge_base,
       [Query.limit(50)]
@@ -79,7 +75,7 @@ export async function askAIResume(messages: ChatMessage[]): Promise<string> {
   let contextText = '';
   try {
     // Attempt full-text query
-    const results = await serverDatabases.listDocuments(
+    const results = await databases.listDocuments(
       DATABASE_ID,
       COLLECTIONS.knowledge_base,
       [
@@ -102,30 +98,6 @@ export async function askAIResume(messages: ChatMessage[]): Promise<string> {
     return getFallbackAnswer(lastMessage);
   }
 
-  // 3. Invoke Gemini via Vercel AI SDK
-  try {
-    const systemPrompt = `You are the AI Assistant representing Abhinav Yadav, an experienced Data Scientist. 
-Your goal is to answer questions about Abhinav's experience, ML projects, technical skills, and background using the provided context.
-
-Context:
-${contextText || 'No direct matching context found. Refer to general candidate details if needed.'}
-
-Rules:
-- Be highly professional, concise, and helpful.
-- Keep answers under 3-4 paragraphs.
-- Answer as an assistant speaking *about* Abhinav (e.g., "Abhinav has experience in..." or "Abhinav worked at...").
-- If the question is unrelated to Abhinav's career, ML, or education, politely redirect the user back to his portfolio topics.
-- If the answer cannot be inferred from the context, state that you don't know the exact details, and invite them to email Abhinav directly at abhi9v2204@gmail.com or contact him via LinkedIn.`;
-
-    const { text } = await generateText({
-      model: google('gemini-1.5-flash'),
-      system: systemPrompt,
-      prompt: lastMessage,
-    });
-
-    return text;
-  } catch (error: any) {
-    console.error('Gemini API call failed, falling back...', error);
-    return getFallbackAnswer(lastMessage);
-  }
+  // Return context-aware answer from Appwrite database
+  return getFallbackAnswer(lastMessage);
 }

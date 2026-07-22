@@ -1,5 +1,15 @@
 {
   "projectId": "6a1ece8b002c669f2b4f",
+  "functions": [
+    {
+      "$id": "portfolio",
+      "name": "Abhinav Portfolio",
+      "runtime": "node-18.0",
+      "execute": ["any"],
+      "entrypoint": "src/main.js",
+      "buildCommand": "npm run build"
+    }
+  ],
   "sites": [
     {
       "$id": "portfolio",

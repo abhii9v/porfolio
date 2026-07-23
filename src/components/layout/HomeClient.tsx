@@ -216,7 +216,7 @@ export default function HomeClient({ experiences, projects, posts }: HomeClientP
             <div className="relative mb-6">
               <img 
                 src="/linkedin_image_abhinav.png" 
-                alt="Abhinav Yadav" 
+                alt="Abhinav Yadav - Senior Data Scientist & Machine Learning Engineer" 
                 className="w-40 h-40 rounded-full object-cover border-4 border-[#782849]/10 shadow-lg"
               />
               <div className="absolute bottom-1 right-2 bg-[#782849] p-2 rounded-full border-2 border-white text-white shadow-md">

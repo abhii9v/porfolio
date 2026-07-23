@@ -39,6 +39,7 @@ export async function generateStaticParams() {
 // Dynamically generate metadata
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const canonicalUrl = `https://abhinavyadav.dev/blog/${slug}`;
   try {
     const response = await serverDatabases.listDocuments(
       DATABASE_ID,
@@ -47,9 +48,45 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     );
     const doc = response.documents[0];
     if (!doc) return { title: 'Article | Abhinav Yadav' };
+
+    const keywords = [
+      "Abhinav Yadav",
+      "Abhinav Yadav Blog",
+      "Data Science Article",
+      ...(doc.categories || []),
+    ];
+
     return {
       title: `${doc.title} | Abhinav Yadav`,
       description: doc.summary,
+      keywords,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      openGraph: {
+        title: doc.title,
+        description: doc.summary,
+        url: canonicalUrl,
+        type: 'article',
+        publishedTime: doc.publishedAt,
+        authors: ['Abhinav Yadav'],
+        siteName: 'Abhinav Yadav Portfolio',
+        images: [
+          {
+            url: 'https://abhinavyadav.dev/linkedin_image_abhinav.png',
+            width: 1200,
+            height: 630,
+            alt: doc.title,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: doc.title,
+        description: doc.summary,
+        images: ['https://abhinavyadav.dev/linkedin_image_abhinav.png'],
+        creator: '@abhii9v',
+      },
     };
   } catch {
     return {
@@ -57,6 +94,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 }
+
 
 function parseInlineFormatting(text: string): React.ReactNode {
   const regex = /(\*\*.*?\*\*|`.*?`|\[.*?\]\(.*?\))/g;
@@ -320,6 +358,33 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": post.title,
+            "description": post.summary,
+            "url": `https://abhinavyadav.dev/blog/${post.slug}`,
+            "datePublished": post.publishedAt,
+            "author": {
+              "@type": "Person",
+              "name": "Abhinav Yadav",
+              "url": "https://abhinavyadav.dev"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Abhinav Yadav Portfolio",
+              "url": "https://abhinavyadav.dev"
+            },
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": `https://abhinavyadav.dev/blog/${post.slug}`
+            }
+          })
+        }}
+      />
       {/* Back Button */}
       <Link
         href="/blog"

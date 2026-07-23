@@ -1,22 +1,13 @@
 {
-  "projectId": "6a1ece8b002c669f2b4f",
-  "functions": [
-    {
-      "$id": "portfolio",
-      "name": "Abhinav Portfolio",
-      "runtime": "node-18.0",
-      "execute": ["any"],
-      "entrypoint": "src/main.js",
-      "buildCommand": "npm run build"
-    }
-  ],
-  "sites": [
-    {
-      "$id": "portfolio",
-      "name": "Abhinav Portfolio",
-      "buildCommand": "npm run build",
-      "outputDirectory": "out",
-      "framework": "nextjs"
-    }
-  ]
+    "projectId": "6a1ece8b002c669f2b4f",
+    "sites": [
+        {
+            "$id": "porfolio",
+            "name": "porfolio",
+            "buildCommand": "npm run build",
+            "outputDirectory": "out",
+            "framework": "other",
+            "adapter": "static"
+        }
+    ]
 }
